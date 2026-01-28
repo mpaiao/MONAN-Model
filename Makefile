@@ -690,10 +690,10 @@ intel-xd2000:
         "CC_SERIAL = cc" \
         "CXX_SERIAL = CC" \
         "FFLAGS_PROMOTION = -real-size 64" \
-        "FFLAGS_OPT = -O3 -convert big_endian -FR -march=core-avx2 -mtune=core-avx2" \
-        "CFLAGS_OPT = -O3 -std=gnu90" \
-        "CXXFLAGS_OPT = -O3" \
-        "LDFLAGS_OPT = -O3" \
+        "FFLAGS_OPT = -O3 -traceback -convert big_endian -FR -march=core-avx2 -mtune=core-avx2" \
+        "CFLAGS_OPT = -O3 -traceback -std=gnu90" \
+        "CXXFLAGS_OPT = -O3 -traceback" \
+        "LDFLAGS_OPT = -O3 -traceback" \
         "FFLAGS_DEBUG = -g -convert big_endian -FR -CU -CB -check all -fpe0 -traceback" \
         "CFLAGS_DEBUG = -g -traceback" \
         "CXXFLAGS_DEBUG = -g -traceback" \
@@ -715,10 +715,10 @@ intel2-xd2000:
         "CC_SERIAL = cc" \
         "CXX_SERIAL = CC" \
         "FFLAGS_PROMOTION = -real-size 64" \
-        "FFLAGS_OPT = -O2 -convert big_endian -FR -march=core-avx2 -mtune=core-avx2" \
-        "CFLAGS_OPT = -O2 -std=gnu90" \
-        "CXXFLAGS_OPT = -O2" \
-        "LDFLAGS_OPT = -O2" \
+        "FFLAGS_OPT = -O2 -traceback -convert big_endian -FR -march=core-avx2 -mtune=core-avx2" \
+        "CFLAGS_OPT = -O2 -traceback -std=gnu90" \
+        "CXXFLAGS_OPT = -O2 -traceback" \
+        "LDFLAGS_OPT = -O2 -traceback" \
         "FFLAGS_DEBUG = -g -convert big_endian -FR -CU -CB -check all -fpe0 -traceback" \
         "CFLAGS_DEBUG = -g -traceback" \
         "CXXFLAGS_DEBUG = -g -traceback" \
