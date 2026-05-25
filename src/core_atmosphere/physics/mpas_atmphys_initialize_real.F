@@ -359,6 +359,18 @@
 
  enddo
 
+ call mpas_log_write(' ')
+ call mpas_log_write('---~---')
+ call mpas_log_write('   Soil depth layers (init_soil_layers_depth)')
+ call mpas_log_write('---~---')
+ iCell = min(2,nCells)
+ do iSoil=1, nSoilLevels
+    call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r ' &
+                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
+ end do
+ call mpas_log_write('---~---')
+ call mpas_log_write(' ')
+
  end subroutine init_soil_layers_depth
 
 !=================================================================================================================
@@ -455,13 +467,13 @@
        sm_input(ifgSoil+1,iCell) = sm_fg(ifgSoil,iCell)
     enddo
 
-    zhave(nFGSoilLevels+2,iCell) = 300._RKIND/100._RKIND
+    zhave(nFGSoilLevels+2,iCell) = max( zs(nSoilLevels,iCell), 300._RKIND/100._RKIND)
     st_input(nFGSoilLevels+2,iCell) = tmn(iCell)
     sm_input(nFGSoilLevels+2,iCell) = sm_input(nFGSoilLevels,iCell)
 
     if(iCell .eq. 1) then
        do ifgSoil = 1,nFGSoilLevels+2
-          call mpas_log_write('$i $r', intArgs=(/ifgSoil/), realArgs=(/zhave(ifgSoil,iCell)/))
+          call mpas_log_write(' ifgSoil = $i -- zhave = $r', intArgs=(/ifgSoil/), realArgs=(/zhave(ifgSoil,iCell)/))
        enddo
     endif
 
@@ -476,7 +488,7 @@
 
        noah: do iSoil = 1 , nSoilLevels
           input: do ifgSoil = 1 , nFGSoilLevels+2-1
-             if(iCell .eq. 1) call mpas_log_write('$i $i $r $r $r', &
+             if(iCell .eq. 1) call mpas_log_write(' iSoil = $i -- ifgSoil = $i -- zs = $r -- zhave = $r zhaveBelow = $r', &
                                                   intArgs=(/iSoil,ifgSoil/), &
                                                   realArgs=(/zs(iSoil,iCell), zhave(ifgSoil,iCell),zhave(ifgSoil+1,iCell)/))
 
@@ -487,7 +499,7 @@
                       (st_input(ifgSoil,iCell) * (zhave(ifgSoil+1,iCell)-zs(iSoil,iCell))    &
                     +  st_input(ifgSoil+1,iCell) * (zs(iSoil,iCell)-zhave(ifgSoil,iCell)))   &
                          / (zhave(ifgSoil+1,iCell)-zhave(ifgSoil,iCell))
-                if(iCell .eq. 1) call mpas_log_write('$i $i $r $r $r', &
+                if(iCell .eq. 1) call mpas_log_write(' iSoil = $i -- ifgSoil = $i -- zs = $r -- zhave = $r zhaveBelow = $r', &
                                                   intArgs=(/iSoil,ifgSoil/), &
                                                   realArgs=(/zs(iSoil,iCell), zhave(ifgSoil,iCell),zhave(ifgSoil+1,iCell)/))
                          
@@ -531,6 +543,18 @@
     endif
 
  enddo
+
+ call mpas_log_write(' ')
+ call mpas_log_write('---~---')
+ call mpas_log_write('   Soil initial conditions (init_soil_layers_properties)')
+ call mpas_log_write('---~---')
+ iCell = min(2,nCells)
+ do iSoil=1, nSoilLevels
+    call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r -- Temperature = $r -- Moisture = $r' &
+                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
+ end do
+ call mpas_log_write('---~---')
+ call mpas_log_write(' ')
 
  if(allocated(zhave)   ) deallocate(zhave )
  if(allocated(st_input)) deallocate(st_input)

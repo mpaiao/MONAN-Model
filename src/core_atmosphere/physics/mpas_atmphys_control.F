@@ -397,50 +397,31 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
  call mpas_pool_get_array(sfc_input,'kzs'     , kzs    )
 
 
- call mpas_log_write(' ')
- call mpas_log_write('---~---')
- call mpas_log_write('   Soil depth initialisation (beginning of physics_registry_init)')
- call mpas_log_write('---~---')
- iCell = min(2,nCells)
- do iSoil=1, nSoilLevels
-    call mpas_log_write(' Layer $i - Depth = $r' &
-                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
- end do
- call mpas_log_write('---~---')
- call mpas_log_write(' ')
  
 
 !initialization of input variables, if needed:
  if(.not. config_do_restart) then
 
     lsm_select: select case(trim(config_lsm_scheme))
+    case("sf_noah","sf_noahmp")
+       ! Report soil layers as defined during the initialisation step.
+       call mpas_log_write(' ')
+       call mpas_log_write('---~---')
+       call mpas_log_write('   Soil depth layers (physics_registry_init)')
+       call mpas_log_write('---~---')
+       iCell = min(2,nCells)
+       do iSoil=1, nSoilLevels
+          call mpas_log_write(' Layer $i - Depth = $r' &
+                             ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
+       end do
+       call mpas_log_write('---~---')
+       call mpas_log_write(' ')
 
-       case("sf_noah","sf_noahmp")
-       !initialize the thickness of the soil layers for the Noah scheme:
-          do iCell = 1, nCells
+    case default
 
-             do iSoil=1,nSoilLevels
-                dzs(iSoil,iCell) = dzstop(iCell) * exp( kzs(iCell) * real(iSoil-1,kind=RKIND) )
-             end do
-          enddo
-
-       case default
-    
     end select lsm_select
     
  endif
-
- call mpas_log_write(' ')
- call mpas_log_write('---~---')
- call mpas_log_write('   Soil depth initialisation (end of physics_registry_init)')
- call mpas_log_write('---~---')
- iCell = min(2,nCells)
- do iSoil=1, nSoilLevels
-    call mpas_log_write(' Layer $i - Depth = $r' &
-                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
- end do
- call mpas_log_write('---~---')
- call mpas_log_write(' ')
 
 !call mpas_log_write('--- enter subroutine physics_namelist_check.')
 !call mpas_log_write('')
