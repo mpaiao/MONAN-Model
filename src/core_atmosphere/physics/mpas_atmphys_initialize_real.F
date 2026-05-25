@@ -389,7 +389,7 @@
  type (mpas_pool_type), intent(inout) :: fg 
 
 !local variables:
- integer:: iCell,ifgSoil,iSoil
+ integer:: iCell,ifgSoil,iSoil,iCellShow
  integer, pointer:: nCellsSolve,nFGSoilLevels,nSoilLevels
  integer:: num_sm,num_st
  integer,dimension(:),pointer:: landmask
@@ -481,10 +481,11 @@
 
 !... interpolate the soil temperature, soil moisture, and soil liquid temperature to the four
 !    layers used in the NOAH land surface scheme:
-
+ iCellShow = 0
  do iCell = 1, nCellsSolve
 
     if(landmask(iCell) .eq. 1) then
+       if (iCellShow == 0) iCellShow = iCell
 
        noah: do iSoil = 1 , nSoilLevels
           input: do ifgSoil = 1 , nFGSoilLevels+2-1
@@ -548,7 +549,7 @@
  call mpas_log_write('---~---')
  call mpas_log_write('   Soil initial conditions (init_soil_layers_properties)')
  call mpas_log_write('---~---')
- iCell = min(2,nCellsSolve)
+ iCell = max(1,iCellShow)
  do iSoil=1, nSoilLevels
     call mpas_log_write(' Layer $i -- Thickness = $r -- midDepth = $r -- Temperature = $r -- Moisture = $r' &
                        ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell),tslb(iSoil,iCell),smois(iSoil,iCell)/))
