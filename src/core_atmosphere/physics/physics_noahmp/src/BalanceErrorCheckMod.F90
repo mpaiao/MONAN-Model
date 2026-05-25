@@ -70,6 +70,7 @@ contains
 
 ! local variable
     integer                          :: LoopInd      ! loop index
+    real(kind=kind_noahmp)           :: SoilWaterStorage
 
 ! --------------------------------------------------------------------
     associate(                                                                        &
@@ -118,10 +119,12 @@ contains
     ! only water balance check for every soil timestep
     ! Error in water balance should be < 0.1 mm
     if ( SurfaceType == 1 ) then   ! soil
-       WaterStorageTotEnd = CanopyLiqWater + CanopyIce + SnowWaterEquiv + WaterStorageAquifer
+       SoilWaterStorage = 0.0
        do LoopInd = 1, NumSoilLayer
-          WaterStorageTotEnd = WaterStorageTotEnd + SoilMoisture(LoopInd) * ThicknessSnowSoilLayer(LoopInd) * 1000.0
+          SoilWaterStorage = SoilWaterStorage + SoilMoisture(LoopInd) * ThicknessSnowSoilLayer(LoopInd) * 1000.0
        enddo
+       WaterStorageTotEnd = SoilWaterStorage + CanopyLiqWater + CanopyIce + SnowWaterEquiv + WaterStorageAquifer
+
        ! accumualted water change (only for canopy and snow during non-soil timestep)
        SfcWaterTotChgAcc = SfcWaterTotChgAcc + (WaterStorageTotEnd - WaterStorageTotBeg)  ! snow, canopy, and soil water change
        PrecipTotAcc      = PrecipTotAcc      + PrecipTotRefHeight * MainTimeStep          ! accumulated precip 
