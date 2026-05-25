@@ -31,6 +31,7 @@ OBJS =  ConstantDefineMod.o \
 	IrrigationInfilPhilipMod.o \
 	IrrigationMicroMod.o \
 	MatrixSolverTriDiagonalMod.o \
+	NoahmpFatalErrorMod.o \
 	RunoffSubSurfaceDrainageMod.o \
 	RunoffSubSurfaceEquiWaterTableMod.o \
 	RunoffSubSurfaceGroundWaterMod.o \
@@ -167,6 +168,7 @@ IrrigationInfilPhilipMod.o:           ../utility/Machine.o NoahmpVarType.o Const
                                       SoilHydraulicPropertyMod.o
 IrrigationMicroMod.o:                 ../utility/Machine.o NoahmpVarType.o ConstantDefineMod.o \
                                       IrrigationInfilPhilipMod.o
+NoahmpFatalErrorMod.o:                ../utility/Machine.o
 MatrixSolverTriDiagonalMod.o:         ../utility/Machine.o NoahmpVarType.o ConstantDefineMod.o
 RunoffSubSurfaceDrainageMod.o:        ../utility/Machine.o NoahmpVarType.o ConstantDefineMod.o
 RunoffSubSurfaceEquiWaterTableMod.o:  ../utility/Machine.o NoahmpVarType.o ConstantDefineMod.o \

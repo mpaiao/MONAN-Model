@@ -285,9 +285,13 @@
  integer :: iCell,iSoil
  integer, pointer :: nCellsSolve,nSoilLevels,nFGSoilLevels
  integer, pointer :: config_nsoillevels
+ real(kind=RKIND), pointer :: config_dzstop
+ real(kind=RKIND), pointer :: config_kzs
 
  real(kind=RKIND),dimension(:,:),pointer:: dzs_fg,zs_fg
  real(kind=RKIND),dimension(:,:),pointer:: dzs,zs
+ real(kind=RKIND),dimension(:),pointer:: dzstop,kzs
+ logical :: config_fine 
 
 !-----------------------------------------------------------------------------------------------------------------
 !call mpas_log_write('')
@@ -301,11 +305,32 @@
  call mpas_pool_get_array(fg, 'dzs_fg', dzs_fg)
  call mpas_pool_get_array(fg, 'zs', zs)
  call mpas_pool_get_array(fg, 'dzs', dzs)
+ call mpas_pool_get_array(fg, 'dzstop', dzstop)
+ call mpas_pool_get_array(fg, 'kzs', kzs)
 
  call mpas_pool_get_config(configs, 'config_nsoillevels', config_nsoillevels)
 
- if(config_nsoillevels .ne. 4) &
-    call physics_error_fatal('NOAH lsm uses 4 soil layers. Correct config_nsoillevels.')
+
+ call mpas_pool_get_config(configs, 'config_dzstop', config_dzstop)
+ call mpas_pool_get_config(configs, 'config_kzs'   , config_kzs)
+
+ config_fine = ( config_nsoillevels >= 4 ) .and. ( config_dzstop >= 0.001 ) &
+               .and. ( config_kzs > 0.0 )
+
+ if (.not. config_fine) then
+    call mpas_log_write( ' ' )
+    call mpas_log_write( '---~---' )
+    call mpas_log_write( '   Invalid soil depth settings.' )
+    call mpas_log_write( '---~---' )
+    call mpas_log_write( ' config_nsoillevels   = $i (It must be at least 4).' &
+                       , intArgs=(/config_nsoillevels/))
+    call mpas_log_write( ' config_dztop         = $r (It must be >= 0.001).' &
+                       , realArgs=(/config_dzstop/))
+    call mpas_log_write( ' config_kzs           = $r (It must be >= 0.0).' &
+                       , realArgs=(/ config_kzs /))
+    call mpas_log_write(' ')
+    call physics_error_fatal(' At least one of the settings for soil depth is incorrect.')
+ end if
 
  do iCell = 1, nCellsSolve
     iSoil = 1
@@ -318,10 +343,11 @@
  enddo
 
  do iCell = 1, nCellsSolve
-    dzs(1,iCell) = 0.10_RKIND
-    dzs(2,iCell) = 0.30_RKIND
-    dzs(3,iCell) = 0.60_RKIND
-    dzs(4,iCell) = 1.00_RKIND
+    dzstop(iCell) = config_dzstop
+    kzs(iCell)    = config_kzs
+    do iSoil = 1, nSoilLevels
+       dzs(iSoil,iCell) = dzstop(iCell) * exp( kzs(iCell) * real(iSoil-1,kind=RKIND) )
+    end do
 
     iSoil = 1
     zs(iSoil,iCell)  = 0.5_RKIND * dzs(iSoil,iCell)
@@ -409,8 +435,8 @@
     call mpas_log_write('Error in interpolation of sm_fg to MPAS grid: num_sm = $i', messageType=MPAS_LOG_CRIT, intArgs=(/num_sm/))
  endif 
 
- if(config_nsoillevels .ne. 4) &
-    call physics_error_fatal('NOAH lsm uses 4 soil layers. Correct config_nsoillevels.')
+ if(config_nsoillevels < 4) &
+    call physics_error_fatal('NOAH and Noah-MP require at least 4 soil layers. Correct config_nsoillevels.')
 
  if(.not.allocated(zhave)   ) allocate(zhave(nFGSoilLevels+2,nCellsSolve)   )
  if(.not.allocated(st_input)) allocate(st_input(nFGSoilLevels+2,nCellsSolve))

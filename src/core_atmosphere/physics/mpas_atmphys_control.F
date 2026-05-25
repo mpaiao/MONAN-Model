@@ -358,11 +358,12 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
  end subroutine physics_namelist_check
 
 !=================================================================================================================
- subroutine physics_registry_init(mesh,configs,sfc_input)
+ subroutine physics_registry_init(mesh,dims,configs,sfc_input)
 !=================================================================================================================
 
 !input arguments:
  type(mpas_pool_type),intent(in):: mesh
+ type(mpas_pool_type),intent(in):: dims
  type(mpas_pool_type),intent(in):: configs
 
 !inout arguments:
@@ -372,25 +373,44 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
  logical,pointer:: config_do_restart
  character(len=StrKIND),pointer:: config_lsm_scheme
  integer,pointer:: nCells
+ integer, pointer :: nSoilLevels
  integer,dimension(:),pointer:: landmask
 
- real(kind=RKIND),dimension(:,:),pointer:: dzs
+ real(kind=RKIND),dimension(:,:), pointer :: dzs
+ real(kind=RKIND),dimension(:)  , pointer :: dzstop, kzs
 
 !local variables:
  integer:: iCell
+ integer:: iSoil
 
 !-----------------------------------------------------------------------------------------------------------------
 
  call mpas_pool_get_config(configs,'config_do_restart',config_do_restart)
  call mpas_pool_get_config(configs,'config_lsm_scheme',config_lsm_scheme)
+ call mpas_pool_get_dimension(dims, 'nSoilLevels', nSoilLevels)
 
  call mpas_pool_get_dimension(mesh,'nCells',nCells)
 
  call mpas_pool_get_array(sfc_input,'landmask',landmask)
  call mpas_pool_get_array(sfc_input,'dzs'     , dzs    )
+ call mpas_pool_get_array(sfc_input,'dzstop'  , dzstop )
+ call mpas_pool_get_array(sfc_input,'kzs'     , kzs    )
+
+
+ call mpas_log_write(' ')
+ call mpas_log_write('---~---')
+ call mpas_log_write('   Soil depth initialisation (beginning of physics_registry_init)'
+ call mpas_log_write('---~---')
+ iCell = min(2,nCells)
+ do iSoil=1, nSoilLevels
+    call mpas_log_write(' Layer $i - Depth = $r' &
+                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
+ end do
+ call mpas_log_write('---~---')
+ call mpas_log_write(' ')
+ 
 
 !initialization of input variables, if needed:
-
  if(.not. config_do_restart) then
 
     lsm_select: select case(trim(config_lsm_scheme))
@@ -398,10 +418,10 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
        case("sf_noah","sf_noahmp")
        !initialize the thickness of the soil layers for the Noah scheme:
           do iCell = 1, nCells
-             dzs(1,iCell) = 0.10_RKIND
-             dzs(2,iCell) = 0.30_RKIND
-             dzs(3,iCell) = 0.60_RKIND
-             dzs(4,iCell) = 1.00_RKIND
+
+             do iSoil=1,nSoilLevels
+                dzs(iSoil,iCell) = dzstop(iCell) * exp( kzs(iCell) * real(iSoil-1,kind=RKIND) )
+             end do
           enddo
 
        case default
@@ -409,6 +429,18 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
     end select lsm_select
     
  endif
+
+ call mpas_log_write(' ')
+ call mpas_log_write('---~---')
+ call mpas_log_write('   Soil depth initialisation (end of physics_registry_init)'
+ call mpas_log_write('---~---')
+ iCell = min(2,nCells)
+ do iSoil=1, nSoilLevels
+    call mpas_log_write(' Layer $i - Depth = $r' &
+                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
+ end do
+ call mpas_log_write('---~---')
+ call mpas_log_write(' ')
 
 !call mpas_log_write('--- enter subroutine physics_namelist_check.')
 !call mpas_log_write('')
