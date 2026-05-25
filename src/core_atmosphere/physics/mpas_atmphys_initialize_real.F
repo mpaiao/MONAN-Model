@@ -363,7 +363,7 @@
  call mpas_log_write('---~---')
  call mpas_log_write('   Soil depth layers (init_soil_layers_depth)')
  call mpas_log_write('---~---')
- iCell = min(2,nCells)
+ iCell = min(2,nCellsSolve)
  do iSoil=1, nSoilLevels
     call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r ' &
                        ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
@@ -548,7 +548,7 @@
  call mpas_log_write('---~---')
  call mpas_log_write('   Soil initial conditions (init_soil_layers_properties)')
  call mpas_log_write('---~---')
- iCell = min(2,nCells)
+ iCell = min(2,nCellsSolve)
  do iSoil=1, nSoilLevels
     call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r -- Temperature = $r -- Moisture = $r' &
                        ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
