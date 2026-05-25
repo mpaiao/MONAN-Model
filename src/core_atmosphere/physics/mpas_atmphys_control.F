@@ -411,7 +411,7 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
        call mpas_log_write('---~---')
        iCell = min(2,nCells)
        do iSoil=1, nSoilLevels
-          call mpas_log_write(' Layer $i - Depth = $r' &
+          call mpas_log_write(' Layer $i - Thickness = $r' &
                              ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell)/))
        end do
        call mpas_log_write('---~---')

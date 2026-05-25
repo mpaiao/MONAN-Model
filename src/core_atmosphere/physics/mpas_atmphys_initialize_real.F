@@ -365,7 +365,7 @@
  call mpas_log_write('---~---')
  iCell = min(2,nCellsSolve)
  do iSoil=1, nSoilLevels
-    call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r ' &
+    call mpas_log_write(' Layer $i -- Thickness = $r -- MidDepth = $r ' &
                        ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
  end do
  call mpas_log_write('---~---')
@@ -467,7 +467,7 @@
        sm_input(ifgSoil+1,iCell) = sm_fg(ifgSoil,iCell)
     enddo
 
-    zhave(nFGSoilLevels+2,iCell) = max( zs(nSoilLevels,iCell), 300._RKIND/100._RKIND)
+    zhave(nFGSoilLevels+2,iCell) = zs(nSoilLevels,iCell) + dzs(nSoilLevels,iCell)
     st_input(nFGSoilLevels+2,iCell) = tmn(iCell)
     sm_input(nFGSoilLevels+2,iCell) = sm_input(nFGSoilLevels,iCell)
 
@@ -550,8 +550,8 @@
  call mpas_log_write('---~---')
  iCell = min(2,nCellsSolve)
  do iSoil=1, nSoilLevels
-    call mpas_log_write(' Layer $i -- Depth = $r -- Bottom = $r -- Temperature = $r -- Moisture = $r' &
-                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell)/))
+    call mpas_log_write(' Layer $i -- Thickness = $r -- midDepth = $r -- Temperature = $r -- Moisture = $r' &
+                       ,intArgs=(/iSoil/),realArgs=(/dzs(iSoil,iCell),zs(iSoil,iCell),tslb(iSoil,iCell),smois(iSoil,iCell)/))
  end do
  call mpas_log_write('---~---')
  call mpas_log_write(' ')
