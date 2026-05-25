@@ -467,7 +467,7 @@
        sm_input(ifgSoil+1,iCell) = sm_fg(ifgSoil,iCell)
     enddo
 
-    zhave(nFGSoilLevels+2,iCell) = zs(nSoilLevels,iCell) + dzs(nSoilLevels,iCell)
+    zhave(nFGSoilLevels+2,iCell) = max( zs(nSoilLevels,iCell) + dzs(nSoilLevels,iCell), 300._RKIND/100._RKIND)
     st_input(nFGSoilLevels+2,iCell) = tmn(iCell)
     sm_input(nFGSoilLevels+2,iCell) = sm_input(nFGSoilLevels,iCell)
 
