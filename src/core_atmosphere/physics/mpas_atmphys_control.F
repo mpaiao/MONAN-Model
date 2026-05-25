@@ -399,7 +399,7 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
 
  call mpas_log_write(' ')
  call mpas_log_write('---~---')
- call mpas_log_write('   Soil depth initialisation (beginning of physics_registry_init)'
+ call mpas_log_write('   Soil depth initialisation (beginning of physics_registry_init)')
  call mpas_log_write('---~---')
  iCell = min(2,nCells)
  do iSoil=1, nSoilLevels
@@ -432,7 +432,7 @@ else if (trim(config_physics_suite) == 'mesoscale_reference_monan') then
 
  call mpas_log_write(' ')
  call mpas_log_write('---~---')
- call mpas_log_write('   Soil depth initialisation (end of physics_registry_init)'
+ call mpas_log_write('   Soil depth initialisation (end of physics_registry_init)')
  call mpas_log_write('---~---')
  iCell = min(2,nCells)
  do iSoil=1, nSoilLevels
