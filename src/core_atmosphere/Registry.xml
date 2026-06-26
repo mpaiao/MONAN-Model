@@ -511,6 +511,7 @@
 			<var name="isctyp"/>
 			<var name="ivgtyp"/>
 			<var name="mminlu"/>
+			<var name="mminsc"/>
 			<var name="isice_lu"/>
 			<var name="iswater_lu"/>
 			<var name="landmask"/>
@@ -999,6 +1000,7 @@
 			<var name="pin"/>
 			<var name="ozmixm"/>
 			<var name="mminlu"/>
+			<var name="mminsc"/>
 			<var name="isice_lu"/>
 			<var name="iswater_lu"/>
 			<var name="xland"/>
@@ -4530,6 +4532,9 @@
 
                 <var name="mminlu" type="text" dimensions="" units="unitless"
                      description="land use classification"/>
+
+                <var name="mminsc" type="text" dimensions="" units="unitless"
+                     description="soil colour classification"/>
 
                 <var name="isice_lu" name_in_code="isice" type="integer" dimensions="" units="unitless" default_value="24"
                      description="Index category for snow/ice"/>
