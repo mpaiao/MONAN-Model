@@ -2457,11 +2457,6 @@
                      description="threshold above which accumulated radiation diagnostics are reset"
                      possible_values="Positive real values"/>
 
-                <nml_option name="config_bucket_sflx" type="real" default_value="1.0e9" in_defaults="false"
-                     units="-"
-                     description="threshold above which the absolute accumulated surface flux diagnostics are reset"
-                     possible_values="Positive real values"/>
-
                 <nml_option name="config_bucket_sfcpbldt" type="real" default_value="1.0e9" in_defaults="false"
                      units="-"
                      description="threshold above which accumulated sfc layer pbl diagnostics are reset"
