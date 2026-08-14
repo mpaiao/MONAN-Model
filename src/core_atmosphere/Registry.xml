@@ -3111,6 +3111,14 @@
                      description="wind speed at lowest model level"
                      packages="bl_mynn_in;bl_ysu_in"/>
 
+                <var name="hfx_spr" type="real" dimensions="nCells Time" units="W m^{-2}"
+                     description="upward heat flux at the surface from ocean spray"
+                     packages="bl_mynn_in;bl_ysu_in"/>
+
+                <var name="lh_spr" type="real" dimensions="nCells Time" units="W m^{-2}"
+                     description="latent heat flux at the surface from ocean spray"
+                     packages="bl_mynn_in;bl_ysu_in"/>
+
                 <var name="achfx" type="real" dimensions="nCells Time" units="J m^{-2}"
                      description="accumulated upward heat flux at the surface"
                      packages="bl_mynn_in;bl_ysu_in"/>
